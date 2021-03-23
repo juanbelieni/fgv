@@ -5,7 +5,7 @@ services:
     build:
       context: .
     volumes:
-      - ./src:/home/jovyan
+      - ./src:/home/jovyan/src
     ports:
       - 8888:8888
     container_name: python-notebook
