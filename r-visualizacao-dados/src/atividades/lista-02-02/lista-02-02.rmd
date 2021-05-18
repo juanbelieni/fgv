@@ -1,0 +1,236 @@
+---
+title: "Lista 2.2"
+author: "Juan Belieni"
+date: "Maio de 2020"
+output: pdf_document
+---
+
+# Exercício 1
+
+Importando os pacotes necessários:
+
+```{r results='hide', message=FALSE, warning=FALSE}
+library(ggplot2)
+library(scales)
+library(grid)
+library(gridExtra)
+library(dplyr)
+library(ggrepel)
+```
+
+Importando as três tabelas que vão ser utilizadas:
+
+```{r message = FALSE}
+data(Minard.troops, package = "HistData")
+Minard.troops %>% head()
+```
+
+```{r message = FALSE}
+data(Minard.cities, package = "HistData")
+Minard.cities %>% head()
+```
+
+```{r message = FALSE}
+data(Minard.temp, package = "HistData")
+Minard.temp %>% head()
+```
+
+## Gráficos do artigo
+
+```{r message = FALSE}
+ggplot(Minard.troops, aes(long, lat)) +
+  geom_path(aes(size = survivors))
+```
+```{r message = FALSE}
+ggplot(Minard.troops, aes(long, lat)) +
+  geom_path(aes(size = survivors, colour = direction, group = group)) +
+  coord_fixed()
+```
+```{r message = FALSE}
+ggplot(Minard.troops, aes(long, lat)) +
+  geom_path() +
+  geom_point(aes(size = survivors, color = direction)) +
+  coord_fixed()
+```
+
+```{r message = FALSE}
+breaks <- c(1, 2, 3) * 10^5
+ggplot(Minard.troops, aes(long, lat)) +
+  geom_path(
+    aes(size = survivors, colour = direction, group = group),
+    lineend = "round"
+  ) +
+  scale_size(
+    "Survivors",
+    range = c(1, 10), #c(0.5, 15),
+    breaks = breaks,
+    labels = comma(breaks)
+  ) +
+  scale_color_manual(
+    "Direction",
+    values = c("#E8CBAB", "#1F1A1B"),
+    labels = c("Advance", "Retreat")
+  )
+
+plot_troops <- last_plot()
+```
+
+```{r message = FALSE}
+plot_troops +
+  labs(x = NULL, y = NULL) +
+  guides(color = FALSE, size = FALSE) +
+  theme_bw()
+```
+
+```{r message = FALSE}
+plot_troops +
+  geom_point(data = Minard.cities) +
+  geom_text_repel(data = Minard.cities, aes(label = city))
+
+plot_troops_cities <- last_plot()
+```
+
+```{r message = FALSE}
+ggplot(Minard.temp, aes(long, temp)) +
+  geom_path(color = "grey", size = 1.5) +
+  geom_point(size = 2)
+```
+
+```{r message = FALSE}
+Minard.temp <- Minard.temp %>%
+  mutate(label = paste0(temp, "° ", date))
+
+ggplot(Minard.temp, aes(long, temp)) +
+  geom_path(color = "grey", size = 1.5) +
+  geom_point(size = 1) +
+  geom_text_repel(aes(label = label), size = 4)
+
+plot_temp <- last_plot()
+```
+
+```{r message = FALSE}
+grid.arrange(plot_troops_cities, plot_temp)
+```
+```{r message = FALSE}
+plot_troops_cities +
+  coord_cartesian(xlim = c(24, 38)) +
+  labs(x = NULL, y = NULL) +
+  guides(color = FALSE, size = FALSE) +
+  theme_void()
+
+plot_troops_cities_fixed <- last_plot()
+```
+
+```{r message = FALSE}
+plot_temp +
+  coord_cartesian(xlim = c(24, 38)) +
+  labs(x = NULL, y = "Temperature") +
+  theme_bw() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    axis.text.x = element_blank(), axis.ticks = element_blank(),
+    panel.border = element_blank()
+  )
+
+plot_temp_fixed <- last_plot()
+```
+```{r message = FALSE}
+grid.arrange(plot_troops_cities_fixed, plot_temp_fixed, nrow = 2, heights = c(3.5, 1.2))
+grid.rect(width = .99, height = .99, gp = gpar(lwd = 2, col = "gray", fill = NA))
+```
+
+## Gráfico customizado
+
+```{r message = FALSE}
+breaks <- c(1, 2, 3) * 10^5
+ggplot(Minard.troops, aes(long, lat)) +
+  geom_path(
+    mapping = aes(size = survivors,
+                  colour = direction,
+                  group = group),
+    lineend = "round"
+  ) +
+  scale_size(
+    "Survivors",
+    range = c(0.5, 20),
+    breaks = breaks,
+    labels = comma(breaks)
+  ) +
+  scale_color_manual(
+    "Direction",
+    values = c("#E8CBAB", "#AAAAAA"),
+    labels = c("Advance", "Retreat")
+  ) +
+  geom_point(data = Minard.cities, size = 2) +
+  geom_text_repel(data = Minard.cities, mapping = aes(label = city)) +
+  geom_vline(data = Minard.temp, mapping = aes(xintercept = long), linetype = "dashed") +
+  geom_label_repel(data = Minard.temp, mapping = aes(x = long, y = 54, label = temp, fill = temp)) +
+  scale_fill_gradient2(low = "cyan", high = "red") +
+  coord_cartesian(xlim = c(24, 38)) +
+  labs(x = NULL, y = NULL) +
+  guides(color = FALSE, size = FALSE) +
+  theme_void()
+
+
+```
+
+# Exercício 2
+
+```{r fig.align="center"}
+library("gapminder")
+
+gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarise(pop = sum(pop)) %>%
+  ggplot(aes(x = reorder(continent, pop), y = factor(pop), fill = continent)) +
+  geom_col(width = 1) +
+  coord_polar() +
+  guides(fill = FALSE) +
+  labs(x = NULL, y = NULL) +
+  theme_bw() +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+```
+
+# Exercício 3: Gapminder
+
+O Gapminder surgiu em 2005 e revolucionou a maneira que enxergávamos a visualização de dados e estatística. No seu primeiro Ted Talk, [The best stats you've ever seen](https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen?utm_campaign=tedspread&utm_medium=referral&utm_source=tedcomshare), Hans Rosling apresenta como a visualização de dados pode contrariar a nossa intuição sobre a realidade, já que muitas vezes temos ideias pré-concebidas sobre o mundo, e que foram formuladas décadas atrás.
+
+O mundo de hoje é bem diferente do que era antigamente, e o Hans exemplifica isso utilizando um gráfico animado que mostra a variação de diversos indicadores pelo tempo. A mesma base de dados pode ser importada no R e ser utilizada para produzir gráficos parecidos ou com outras propostas.
+
+```{r echo=FALSE}
+gapminder %>%
+  filter(year == 1952) %>%
+  ggplot(aes(lifeExp, gdpPercap)) +
+  geom_point(aes(size = pop, color = continent), alpha = 0.4) +
+  geom_point(data = subset(gapminder, pop > 1.2e+08 & year == 1952), mapping = aes(size = pop, color = continent)) +
+  scale_size(range = c(.1, 15)) +
+  geom_label_repel(data = subset(gapminder, pop > 1.2e+08 & year == 1952), xlim = c(NA, Inf),
+                   ylim = c(-Inf, Inf), aes(label = country)) +
+  guides(size = FALSE, alpha = FALSE) +
+  labs(title = "1952", x = "Expectativa de vida", y = "PIB per capta", color = "Continente")
+```
+
+```{r echo=FALSE}
+gapminder %>%
+  filter(year == 2007) %>%
+  ggplot(aes(lifeExp, gdpPercap)) +
+  geom_point(aes(size = pop, color = continent), alpha = 0.4) +
+  geom_point(data = subset(gapminder, pop > 1.7e+08 & year == 2007), mapping = aes(size = pop, color = continent)) +
+  scale_size(range = c(.1, 15)) +
+  geom_label_repel(data = subset(gapminder, pop > 1.7e+08 & year == 2007), xlim = c(NA, Inf),
+                   ylim = c(-Inf, Inf), aes(label = country)) +
+  guides(size = FALSE, alpha = FALSE) +
+  labs(title = "2007", x = "Expectativa de vida", y = "PIB per capta", color = "Continente")
+```
+
+## Contexto e missão
+
+A criação do Gapminder se deu após a proposta dos Objetivos do Milênio da ONU, com a missão de oferecer ferramentas de estatística e visualização de dados baseados em fatos, com o fim de gerar um debate mais rico acerca da sociedade.
+
+Para que isso acontecesse, a instituição ofereceu desde o início maneiras inclusivas de se manipular dados, principalmente por meio da Internet. Hoje, é possível acessar uma ferramenta completa de visualização de dados sobre o mundo, muito parecido com a utilizada por Hans Rosling ([www.gapminder.org/tools](https://www.gapminder.org/tools/)).
