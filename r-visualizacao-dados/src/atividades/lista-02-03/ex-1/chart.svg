@@ -1,0 +1,68 @@
+<svg
+  height="500"
+  width="770"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <text font-size="16px" transform="translate(20, 250) rotate(-90)">População</text>
+  <text dominant-baseline="central" font-size="16px" x="385" y="465">Continente</text>
+
+  <text dominant-baseline="central" font-size="16px" x="40" y="20">4e+09</text>
+  <line
+    style="stroke:rgba(0, 0, 0, 0.1);stroke-width:2"
+    x1="90"
+    x2="730"
+    y1="20"
+    y2="20"
+  />
+
+  <text dominant-baseline="central" font-size="16px" x="40" y="120">3e+09</text>
+  <line
+    style="stroke:rgba(0, 0, 0, 0.1);stroke-width:2"
+    x1="90"
+    x2="730"
+    y1="120"
+    y2="120"
+  />
+
+  <text dominant-baseline="central" font-size="16px" x="40" y="220">2e+09</text>
+  <line
+    style="stroke:rgba(0, 0, 0, 0.1);stroke-width:2"
+    x1="90"
+    x2="730"
+    y1="220"
+    y2="220"
+  />
+
+  <text dominant-baseline="central" font-size="16px" x="40" y="320">1e+09</text>
+  <line
+    style="stroke:rgba(0, 0, 0, 0.1);stroke-width:2"
+    x1="90"
+    x2="730"
+    y1="320"
+    y2="320"
+  />
+
+  <text dominant-baseline="central" font-size="16px" x="70" y="420">0</text>
+  <line
+    style="stroke:rgba(0, 0, 0, 0.1);stroke-width:2"
+    x1="90"
+    x2="730"
+    y1="420"
+    y2="420"
+  />
+
+  <rect fill="red" height="90" width="100" x="150" y="330"/>
+  <text font-size="16px" text-anchor="middle" x="200" y="440">Africa</text>
+
+  <rect fill="yellow" height="85" width="100" x="260" y="335"/>
+  <text font-size="16px" text-anchor="middle" x="310" y="440">Americas</text>
+
+  <rect fill="lightgreen" height="380" width="100" x="370" y="40"/>
+  <text font-size="16px" text-anchor="middle" x="420" y="440">Asia</text>
+
+  <rect fill="blue" height="50" width="100" x="480" y="370"/>
+  <text font-size="16px" text-anchor="middle" x="530" y="440">Europe</text>
+
+  <rect fill="pink" height="10" width="100" x="590" y="410"/>
+  <text font-size="16px" text-anchor="middle" x="640" y="440">Oceania</text>
+</svg>
